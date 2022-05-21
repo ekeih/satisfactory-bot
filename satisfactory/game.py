@@ -1,12 +1,28 @@
-from typing import Dict
+import random
+from datetime import date, datetime
+from typing import Dict, List
 
+import requests
 import vdf
 from steam.client import SteamClient
 from steam.core.msg import MsgProto
 from steam.enums.emsg import EMsg
 from steam.utils.proto import proto_to_dict
 
+NEWS_URL = "https://store.steampowered.com/events/ajaxgetadjacentpartnerevents/?appid=526870&count_after=10"
 APPID = 1690800  # Steam ID of Satisfactory
+
+QUOTES = [
+    "Harvest.",
+    "Comply.",
+    "Harvest. It.",
+    "I strongly advise you to harvest this specimen.",
+    "Your contract legally compels you to harvest this artifact.",
+    "You are so lucky that you found this most valuable artifact.",
+    "Picking up multiple FICSIT personnel in the area, proceed with harvest before it's too late.",
+    "Breaking news from Earth: widespread chaos and mayhem. World president urges all citizens to do their part and harvest alien artifacts.",
+    "Relaying message: Hello this is maternal figure. I have taken ill and need your help to find a cure. Doctors say that the only remedy is alien artifacts.",
+]
 
 
 def get_versions() -> Dict:
@@ -29,3 +45,36 @@ def get_experimental_version() -> str:
 
 def get_early_access_version() -> str:
     return get_versions()["public"]["buildid"]
+
+
+def sanitize_steam_string(text: str) -> str:
+    text = text.replace("&", "&amp;")
+    text = text.replace("<", "&lt;")
+    text = text.replace(">", "&gt;")
+    text = text.replace("[list]", "")
+    text = text.replace("[/list]", "")
+    text = text.replace("[*]", "-")
+    text = text.replace("[b]", "<b>")
+    text = text.replace("[/b]", "</b>")
+    return text
+
+
+def get_patchnotes(age: int = 60) -> List[str]:
+    news = []
+    response = requests.get(NEWS_URL)
+    response.raise_for_status()
+    for event in response.json()["events"]:
+        if "patchnotes" in event["announcement_body"]["tags"] and not event["event_name"].startswith("Experimental"):
+            event_time = datetime.fromtimestamp(event["announcement_body"]["posttime"])
+            event_age = datetime.now() - event_time
+            if event_age.total_seconds() / 60 < age:
+                name = sanitize_steam_string(event["event_name"])
+                body = sanitize_steam_string(event["announcement_body"]["body"])
+                event_time = datetime.fromtimestamp(event["announcement_body"]["posttime"]).strftime("%d.%m.%Y %H:%M")
+                new_news_item = "<b>%s</b> (%s)\n\n%s" % (name, event_time, body[:1000])
+                news.append(new_news_item)
+    return news
+
+
+def get_random_quote() -> str:
+    return random.choice(QUOTES)
