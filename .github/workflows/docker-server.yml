@@ -2,7 +2,8 @@ name: Docker Server
 
 on:
   push:
-    tags: ["[0-9]+"]
+    tags:
+      - "server-*/*"
 
 env:
   REGISTRY: ghcr.io
@@ -19,6 +20,15 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v3
 
+      - name: Figure out release tag
+        id: prep
+        if: github.event_name == 'push' && contains(github.ref, 'refs/tags/')
+        run: |
+          RELEASE_BRANCH=${GITHUB_REF_NAME%%/*}
+          RELEASE_VERSION=${GITHUB_REF_NAME#*/}
+          echo ::set-output name=branch::${RELEASE_BRANCH}
+          echo ::set-output name=version::${RELEASE_VERSION}
+
       - name: Log into registry ${{ env.REGISTRY }}
         if: github.event_name != 'pull_request'
         uses: docker/login-action@v2
@@ -31,7 +41,9 @@ jobs:
         id: meta
         uses: docker/metadata-action@v4
         with:
-          images: ${{ env.REGISTRY }}/${{ env.IMAGE_NAME }}
+          images: ${{ env.REGISTRY }}/${{ github.repository }}/${{ steps.prep.outputs.branch }}
+          tags: |
+            type=raw,value=${{ steps.prep.outputs.version }}
 
       - name: Build and push Docker image
         id: build-and-push
@@ -39,6 +51,6 @@ jobs:
         with:
           context: .
           file: satisfactory.Dockerfile
-          push: ${{ github.event_name != 'pull_request' }}
+          # push: ${{ github.event_name != 'pull_request' }}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}

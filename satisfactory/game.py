@@ -1,5 +1,5 @@
 import random
-from datetime import date, datetime
+from datetime import datetime
 from typing import Dict, List
 
 import requests
@@ -34,17 +34,9 @@ def get_versions() -> Dict:
 
     for branch, value in appinfo["depots"]["branches"].items():
         if not value.get("pwdrequired"):
-            result[branch] = value
+            result[branch] = {"timeupdated": datetime.utcfromtimestamp(int(value["timeupdated"])), "buildid": value["buildid"]}
 
     return result
-
-
-def get_experimental_version() -> str:
-    return get_versions()["experimental"]["buildid"]
-
-
-def get_early_access_version() -> str:
-    return get_versions()["public"]["buildid"]
 
 
 def sanitize_steam_string(text: str) -> str:
