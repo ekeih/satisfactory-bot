@@ -3,7 +3,7 @@ name: Docker Server
 on:
   push:
     tags:
-      - "server-[a-zA-Z0-9]+/[0-9]+.[0-9]+.[0-9]-[0-9]+"
+      - "server-*/*"
 
 env:
   REGISTRY: ghcr.io

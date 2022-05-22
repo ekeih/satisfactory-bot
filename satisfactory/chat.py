@@ -48,16 +48,15 @@ class Bot:
 
     def check_images(self, context: CallbackContext) -> None:
         versions = satisfactory.game.get_versions()
-        existing_git_tags = self.github_client.get_tags()
+        existing_git_tags = [tag.name for tag in self.github_client.get_tags()]
         for version, values in versions.items():
             version_tag = "server-%s/%s-%s" % (version, values["timeupdated"].strftime("%Y.%m.%d"), values["buildid"])
-            for tag in existing_git_tags:
-                if tag.name == version_tag:
-                    logging.info("Git tag %s for %s already exists, doing nothing", version_tag, version)
-                else:
-                    logging.info("Tagging new %s version: %s", version, version_tag)
-                    self.github_client.create_tag(version_tag)
-                    context.bot.send_message(chat_id=self.chat_id, text="Tagged new release <code>%s</code>\n\n%s" % (version_tag, satisfactory.game.get_random_quote()), parse_mode=ParseMode.HTML)
+            if version_tag in existing_git_tags:
+                logging.info("Git tag %s for %s already exists, doing nothing", version_tag, version)
+            else:
+                logging.info("Tagging new %s version: %s", version, version_tag)
+                self.github_client.create_tag(version_tag)
+                context.bot.send_message(chat_id=self.chat_id, text="Tagged new release <code>%s</code>\n\n%s" % (version_tag, satisfactory.game.get_random_quote()), parse_mode=ParseMode.HTML)
 
     def check_news(self, context: CallbackContext) -> None:
         for news in satisfactory.game.get_patchnotes():
