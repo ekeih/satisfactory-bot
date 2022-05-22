@@ -30,7 +30,12 @@ WORKDIR /home/steam/Steam
 RUN curl -sqL "https://steamcdn-a.akamaihd.net/client/installer/steamcmd_linux.tar.gz" | tar zxvf -
 
 # Install the Satisfactory dedicated server
-RUN /home/steam/Steam/steamcmd.sh +force_install_dir SatisfactoryDedicatedServer +login anonymous +app_update 1690800 +quit
+ARG RELEASE_BRANCH=public
+RUN if [ "$RELEASE_BRANCH" = "public" ]; then \
+    /home/steam/Steam/steamcmd.sh +force_install_dir SatisfactoryDedicatedServer +login anonymous +app_update 1690800 +quit; \
+    else \
+    /home/steam/Steam/steamcmd.sh +force_install_dir SatisfactoryDedicatedServer +login anonymous +app_update 1690800 -beta $RELEASE_BRANCH +quit; \
+    fi
 
 # Set the entrypoint to the dedicated server start script
 ENTRYPOINT [ "/home/steam/Steam/SatisfactoryDedicatedServer/FactoryServer.sh" ]
