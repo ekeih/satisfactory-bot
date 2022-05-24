@@ -63,7 +63,7 @@ def get_patchnotes(age: int = 60) -> List[str]:
                 name = sanitize_steam_string(event["event_name"])
                 body = sanitize_steam_string(event["announcement_body"]["body"])
                 event_time = datetime.fromtimestamp(event["announcement_body"]["posttime"]).strftime("%d.%m.%Y %H:%M")
-                new_news_item = "<b>%s</b> (%s)\n\n%s" % (name, event_time, body[:1000])
+                new_news_item = "<b>%s</b> (%s)\n\n%s" % (name, event_time, body)
                 news.append(new_news_item)
     return news
 
