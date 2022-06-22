@@ -1,6 +1,6 @@
 import logging
-from datetime import datetime
 
+from prometheus_client import Summary
 from telegram import ParseMode, Update, constants
 from telegram.ext import CallbackContext, CommandHandler, Updater
 
@@ -28,24 +28,30 @@ class Bot:
         self.updater.start_polling()
         self.updater.idle()
 
+    @Summary("satisfactory_bot_start_handler", "Time spent running start_handler").time()
     def start_handler(self, update: Update, context: CallbackContext):
         logging.info("/start called for chat %s", update.effective_chat.id)
         context.bot.send_message(chat_id=update.effective_chat.id, text=satisfactory.game.get_random_quote())
 
+    @Summary("satisfactory_bot_check_images_handler", "Time spent running check_images_handler").time()
     def check_images_handler(self, update: Update, context: CallbackContext):
         logging.info("/images called for chat %s", update.effective_chat.id)
         self.check_images(context)
 
+    @Summary("satisfactory_bot_check_news_handler", "Time spent running check_news_handler").time()
     def check_news_handler(self, update: Update, context: CallbackContext):
         logging.info("/news called for chat %s", update.effective_chat.id)
         self.check_news(context)
 
+    @Summary("satisfactory_bot_check_images_timer", "Time spent running check_images_timer").time()
     def check_images_timer(self, context: CallbackContext):
         self.check_images(context)
 
+    @Summary("satisfactory_bot_check_news_timer", "Time spent running the check_news_timer").time()
     def check_news_timer(self, context: CallbackContext):
         self.check_news(context)
 
+    @Summary("satisfactory_bot_check_images", "Time spent running check_images").time()
     def check_images(self, context: CallbackContext) -> None:
         versions = satisfactory.game.get_versions()
         existing_git_tags = [tag.name for tag in self.github_client.get_tags()]
@@ -58,6 +64,7 @@ class Bot:
                 self.github_client.create_tag(version_tag)
                 context.bot.send_message(chat_id=self.chat_id, text="Tagged new release <code>%s</code>\n\n%s" % (version_tag, satisfactory.game.get_random_quote()), parse_mode=ParseMode.HTML)
 
+    @Summary("satisfactory_bot_check_news", "Time spent running check_news").time()
     def check_news(self, context: CallbackContext) -> None:
         for news in satisfactory.game.get_patchnotes():
             if len(news) <= constants.MAX_MESSAGE_LENGTH:

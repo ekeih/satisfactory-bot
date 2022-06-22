@@ -1,4 +1,3 @@
-# Use Ubuntu 20.04 as base image
 FROM ubuntu:20.04
 
 # Install required system packages
