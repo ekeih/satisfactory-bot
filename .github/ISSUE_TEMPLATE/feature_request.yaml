@@ -1,0 +1,39 @@
+name: Suggest a new Feature for the Telegram Bot
+description: The Bot is missing something? Explain your idea!
+labels:
+  - enhancement
+body:
+  - type: markdown
+    attributes:
+      value: |
+        This issue form is for suggesting features and enhancements on the Telegram Bot only!
+
+        If you have found a bug, or want to report something related to the Gameserver images, please use the [official channel][official].
+
+        [official]: https://questions.satisfactorygame.com/search?category=dedicated%20servers&date=All%20Time&status=open
+
+  - type: textarea
+    validations:
+      required: true
+    attributes:
+      label: The problem
+      description: >-
+        If your idea is related to a problem, give us a clear and concise description of what the problem is, f.ex. "I'm always frustrated when [...]".
+
+  - type: textarea
+    validations:
+      required: true
+    attributes:
+      label: The solution
+      description: >-
+        Please describe the feature or enhancement you want to see implemented in this project, which will solve the aforementioned problem. Include as many details as possible.
+  - type: markdown
+    attributes:
+      value: |
+        # Solution
+
+  - type: textarea
+    attributes:
+      label: Additional information
+      description: >
+        If you have any additional information for us, use the field below.

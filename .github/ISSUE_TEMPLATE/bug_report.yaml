@@ -1,14 +1,16 @@
 name: Report an issue with the Telegram Bot
 description: Somethings not quite right with the Satisfactory Telegram Bot? Create a report for it now!
+labels:
+  - bug
 body:
   - type: markdown
     attributes:
       value: |
         This issue form is for reporting bugs on the Telegram Bot only!
 
-        If you have a feature or enhancement request, or want to report something wrong with the Gameserver images itself, please use the [gameserver specific templates][issues].
+        If you have a feature or enhancement request, or want to report something wrong with the Gameserver images itself, please use the [official channel][official].
 
-        [issues]: https://github.com/ekeih/satisfactory-bot/issues
+        [official]: https://questions.satisfactorygame.com/search?category=dedicated%20servers&date=All%20Time&status=open
   - type: textarea
     validations:
       required: true
@@ -58,7 +60,7 @@ body:
     attributes:
       label: Anything in the logs that might be useful for us?
       description: For example, error message, or stack traces.
-      render: txt
+      render: raw
   - type: textarea
     attributes:
       label: Additional information
