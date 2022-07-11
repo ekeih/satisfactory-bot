@@ -26,6 +26,7 @@ body:
       required: true
     attributes:
       label: The solution
+      placeholder: "We could solve the problem by [...]"
       description: >-
         Please describe the feature or enhancement you want to see implemented in this project, which will solve the aforementioned problem.  
         Include as many details as possible.
@@ -35,6 +36,11 @@ body:
       required: true
     attributes:
       label: Alternatives
+      placeholder: >-
+        A different solution might be to [...].
+        
+        The pros and cons of this approach compared to the preferred one are:
+          - ...
       description: >-
         Did you consider alternative solutions? If so, let us know in the field below.  
         Again, include as many details as possible.
