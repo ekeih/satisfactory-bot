@@ -8,7 +8,7 @@ body:
       value: |
         This issue form is for suggesting features and enhancements on the Telegram Bot only!
 
-        If you have found a bug, or want to report something related to the Gameserver images, please use the [official channel][official].
+        If you have found a bug, or want to suggest a feature related to the Gameserver images, please use the [official channel][official].
 
         [official]: https://questions.satisfactorygame.com/search?category=dedicated%20servers&date=All%20Time&status=open
 
