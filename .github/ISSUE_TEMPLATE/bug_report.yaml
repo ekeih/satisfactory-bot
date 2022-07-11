@@ -31,13 +31,13 @@ body:
       required: true
     attributes:
       label: What version has the issue?
-      placeholder: bot-
+      placeholder: f.ex. 2022.1.1
       description: >
         You can find the version by running `docker ps` and looking at the `tag` of your running container instance.
   - type: input
     attributes:
       label: What was the last working version?
-      placeholder: bot-
+      placeholder: f.ex. 2022.1.1
       description: >
         If known, otherwise leave blank.
   - type: dropdown
@@ -50,11 +50,12 @@ body:
       options:
         - Container
         - Native
+        - Other (please describe below)
 
   - type: markdown
     attributes:
       value: |
-        # Details
+        ## Details
 
   - type: textarea
     attributes:
