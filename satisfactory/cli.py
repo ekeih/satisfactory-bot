@@ -1,8 +1,3 @@
-from gevent import monkey
-
-# Necessary to make the steam api client work in a different thread.
-monkey.patch_all()
-
 import logging
 
 import click

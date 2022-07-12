@@ -57,6 +57,9 @@ def get_versions() -> Dict:
         if not value.get("pwdrequired"):
             result[branch] = {"timeupdated": datetime.utcfromtimestamp(int(value["timeupdated"])), "buildid": value["buildid"]}
 
+    client.logout()
+    client.disconnect()
+
     return result
 
 
