@@ -1,0 +1,5 @@
+blank_issues_enabled: true
+contact_links:
+  - name: To report a bug with the dedicated server, please use the official channel
+    url: https://questions.satisfactorygame.com/search?category=dedicated%20servers&date=All%20Time&status=open
+    about: This is the official issue tracker for Satisfactory. Please report issues with the dedicated server there, since we cannot fix them.
