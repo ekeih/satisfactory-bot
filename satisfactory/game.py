@@ -1,5 +1,6 @@
 import logging
 import random
+import re
 from datetime import datetime
 from typing import Dict, List
 
@@ -60,14 +61,30 @@ def get_versions() -> Dict:
 
 
 def sanitize_steam_string(text: str) -> str:
+
+    # sanitize HTML
     text = text.replace("&", "&amp;")
     text = text.replace("<", "&lt;")
     text = text.replace(">", "&gt;")
-    text = text.replace("[list]", "")
-    text = text.replace("[/list]", "")
+
+    # sanitize steam markup https://steamcommunity.com/comment/Guide/formattinghelp
+    # replace supported tags
     text = text.replace("[*]", "-")
     text = text.replace("[b]", "<b>")
     text = text.replace("[/b]", "</b>")
+    text = text.replace("[i]", "<i>")
+    text = text.replace("[/i]", "</i>")
+    text = text.replace("[u]", "<u>")
+    text = text.replace("[/u]", "</u>")
+    text = text.replace("[s]", "<strike>")
+    text = text.replace("[/s]", "</strike>")
+    text = text.replace("[code]", "<code>")
+    text = text.replace("[/code]", "</code>")
+    text = re.sub("\[url\=(.*)\](.*)\[/url\]", r'<a href="\1">\2</a>', text)
+    text = re.sub("\[quote\=(.*)\](.*)\[/quote\]", r'"\2" -- \1', text)
+    # remove unsupported tags
+    text = re.sub("\[/?(h[0-9]|spoiler|noparse|hr|list|olist)\]", "", text)
+
     return text
 
 
