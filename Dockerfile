@@ -1,5 +1,8 @@
 FROM python:3.10-alpine
 
+ARG SATISFACTORY_BOT_VERSION_ARG=latest
+ENV SATISFACTORY_BOT_VERSION=$SATISFACTORY_BOT_VERSION_ARG
+
 RUN apk add --no-cache gcc musl-dev libffi-dev
 
 WORKDIR /usr/src/app
