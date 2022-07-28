@@ -56,4 +56,4 @@ jobs:
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
           build-args: |
-            SATISFACTORY_BOT_VERSION_ARG=${{ steps.prep.outputs.version }}
+            BOT_VERSION_ARG=${{ steps.prep.outputs.version }}
