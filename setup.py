@@ -18,7 +18,7 @@ def requirements():
 
 setup(
     name="satisfactory-bot",
-    version=getenv("SATISFACTORY_BOT_VERSION", default=datetime.now().strftime("%Y.%m.%d.dev%H%M%S")),
+    version=getenv("BOT_VERSION", default=datetime.now().strftime("%Y.%m.%d.dev%H%M%S")),
     description="A Telegram bot to manage docker images for a satisfactory dedicated server ",
     long_description=readme(),
     url="https://github.com/ekeih/satisfactory-bot",
