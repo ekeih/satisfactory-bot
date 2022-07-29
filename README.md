@@ -1,5 +1,5 @@
 # satisfactory-bot
-A Telegram bot to manage Docker images for a satisfactory dedicated server and post update news to Telegram.
+A Telegram bot to manage Docker images for a [Satisfactory](https://www.satisfactorygame.com) dedicated server and post update news to Telegram.
 
 
 > Satisfactory is a first-person open-world factory building game with a dash of exploration and combat. Play alone or with friends, explore an alien planet, create multi-story factories, and enter conveyor belt heaven!
@@ -34,7 +34,9 @@ To run the bot you can either use the existing [bot image](https://github.com/ek
 
 Then run the bot: `satisfactory-bot -b $telegram-bot-token -g $github-token -c $telegram-chat-id -r $github-repository`.
 
-When the bot discovers a new release of the dedicated server it pushes a git tag to the repository which triggers a GitHub action to build a Docker images with the respective version.
+When the bot discovers a new release of the dedicated server it pushes a git tag to the repository which triggers a GitHub action to build a Docker images with the respective version. The bot checks for new versions every 10 minutes. You can manually trigger a check for new releases by sending `/images` to your bot.
+
+The bot checks for new release notes every 60 minutes and posts new release notes to the specified telegram chat. You can manually trigger a check for new release notes by sending `/news` to your bot.
 
 ## Credits
 
