@@ -2,7 +2,7 @@ import logging
 from importlib import metadata
 
 import click
-from prometheus_client import start_http_server
+from prometheus_client import Gauge, start_http_server
 
 import satisfactory.chat
 import satisfactory.git
@@ -29,6 +29,7 @@ def cli(bot_token: str, github_token: str, chat_id: int, repository: str, metric
     else:
         logging.info("Running version %s", installed_version)
         start_http_server(port=metrics_port, addr=metrics_address)
+        Gauge("satisfactory_bot_info", "Static info of satisfactory-bot", ["version"]).labels(installed_version).set(1)
         github_client = satisfactory.git.Git(github_token, repository)
         bot = satisfactory.chat.Bot(bot_token=bot_token, chat_id=chat_id, github_client=github_client)
         bot.start()
