@@ -3,6 +3,7 @@ import logging
 from prometheus_client import Summary
 from telegram import ParseMode, Update, constants
 from telegram.ext import CallbackContext, CommandHandler, Updater
+from telegram.ext.filters import Filters
 
 import satisfactory.game
 import satisfactory.git
@@ -18,9 +19,9 @@ class Bot:
         self.updater = Updater(token=bot_token, use_context=True)
         self.github_client = github_client
         dispatcher = self.updater.dispatcher
-        dispatcher.add_handler(CommandHandler("start", self.start_handler))
-        dispatcher.add_handler(CommandHandler("images", self.check_images_handler))
-        dispatcher.add_handler(CommandHandler("news", self.check_news_handler))
+        dispatcher.add_handler(CommandHandler("start", self.start_handler, Filters.chat(self.chat_id)))
+        dispatcher.add_handler(CommandHandler("images", self.check_images_handler, Filters.chat(self.chat_id)))
+        dispatcher.add_handler(CommandHandler("news", self.check_news_handler, Filters.chat(self.chat_id)))
 
     def start(self) -> None:
         self.updater.job_queue.run_repeating(self.check_images_timer, interval=60 * 10, first=5)
