@@ -26,7 +26,9 @@ The game data is stored in `/home/steam/.config/Epic/FactoryGame/Saved/SaveGames
 
 ## The Bot
 
-If you only want to use the dedicated server to play Satisfactory, you do not need to use or run the bot yourself. Just use one of the existing images from above.
+> **Note**
+>
+> If you only want to use the dedicated server to play Satisfactory, you do not need to use or run the bot yourself. Just use one of the existing images from above.
 
 When the bot discovers a new release of the dedicated server it pushes a git tag to the repository which triggers a GitHub action to build a Docker images with the respective version. The bot checks for new versions every 10 minutes. You can manually trigger a check for new releases by sending `/images` to your bot.
 
