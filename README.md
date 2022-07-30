@@ -22,7 +22,7 @@ Following ports are exposed by the Docker images:
 - 15000/udp
 - 7777/udp
 
-The game data is stored in `/home/steam/.config/Epic/FactoryGame/Saved/SaveGames/server` and configuration data in`/home/steam/Steam/SatisfactoryDedicatedServer/FactoryGame/Saved`. If you run into permission issues or missing files in the second directory during the first start, check [this issue](https://github.com/YannickFricke/Satisfactory-DS-Docker/issues/2).
+The game data is stored in `/home/steam/.config/Epic/FactoryGame/Saved/SaveGames/server` and configuration data in `/home/steam/Steam/SatisfactoryDedicatedServer/FactoryGame/Saved`. If you run into permission issues or missing files in the second directory during the first start, check [this issue](https://github.com/YannickFricke/Satisfactory-DS-Docker/issues/2).
 
 ## The Bot
 
