@@ -3,7 +3,7 @@ FROM python:3.10-alpine
 ARG BOT_VERSION_ARG=latest
 ENV BOT_VERSION=$BOT_VERSION_ARG
 
-RUN apk add --no-cache gcc musl-dev libffi-dev
+RUN apk add --no-cache gcc g++ musl-dev libffi-dev
 
 WORKDIR /usr/src/app
 
