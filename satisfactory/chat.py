@@ -8,17 +8,20 @@ from telegram.ext.filters import Filters
 
 import satisfactory.game
 import satisfactory.git
+import satisfactory.youtube
 
 
 class Bot:
     updater = None
     github_client = None
+    youtube_client = None
     chat_id = None
 
-    def __init__(self, bot_token: str, chat_id: int, github_client: satisfactory.git.Git):
+    def __init__(self, bot_token: str, chat_id: int, github_client: satisfactory.git.Git, youtube_client: satisfactory.youtube.Youtube):
         self.chat_id = chat_id
         self.updater = Updater(token=bot_token, use_context=True)
         self.github_client = github_client
+        self.youtube_client = youtube_client
         dispatcher = self.updater.dispatcher
         dispatcher.add_handler(CommandHandler("start", self.start_handler, Filters.chat(self.chat_id)))
         dispatcher.add_handler(CommandHandler("quote", self.quote_handler, Filters.chat(self.chat_id)))
@@ -28,6 +31,7 @@ class Bot:
     def start(self) -> None:
         self.updater.job_queue.run_repeating(self.check_images_timer, interval=60 * 10, first=5)
         self.updater.job_queue.run_repeating(self.check_news_timer, interval=60 * 60, first=30)
+        self.updater.job_queue.run_repeating(self.check_videos, interval=60 * 60, first=15)
         self.updater.job_queue.run_once(self.send_random_quote_timer, random.randrange(60*60*24, 60*60*24*7, 1))
         self.updater.start_polling()
         self.updater.idle()
@@ -59,6 +63,10 @@ class Bot:
     @Summary("satisfactory_bot_check_news_timer", "Time spent running the check_news_timer").time()
     def check_news_timer(self, context: CallbackContext):
         self.check_news(context)
+
+    @Summary("satisfactory_bot_check_videos_timer", "Time spent running the check_videos_timer").time()
+    def check_videos_timer(self, context: CallbackContext):
+        self.check_videos(context)
 
     @Summary("satisfactory_bot_send_random_quote_timer", "Time spent running the send_random_quote_timer").time()
     def send_random_quote_timer(self, context: CallbackContext):
@@ -113,3 +121,9 @@ class Bot:
     @Summary("satisfactory_bot_send_random_quote", "Time spent running send_random_quote").time()
     def send_random_quote(self, context: CallbackContext) -> None:
         context.bot.send_message(chat_id=self.chat_id, text=satisfactory.game.get_random_quote(), parse_mode=ParseMode.HTML)
+
+    @Summary("satisfactory_bot_check_videos", "Time spent running check_videos").time()
+    def check_videos(self, context: CallbackContext) -> None:
+        videos = self.youtube_client.get_new_videos()
+        for video in videos:
+            context.bot.send_message(chat_id=self.chat_id, text=video, parse_mode=ParseMode.HTML)

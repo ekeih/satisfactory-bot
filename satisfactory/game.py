@@ -57,7 +57,7 @@ QUOTES = [
     "FICSIT TIP NO. 22: Look behind you.",
     "FICSIT TIP NO. 23: So, uh, wanna go out sometime?",
     "FICSIT TIP NO. 24: Wait is this supposed to be useful or something?",
-    "FICSIT TIP NO. 25: <3",
+    "FICSIT TIP NO. 25: &lt;3",
     "FICSIT TIP NO. 26: Level Up? Ha, Kidding. We don't even have levels.",
     "FICSIT TIP NO. 27: Can't stop wont stop!",
     "FICSIT TIP NO. 28: Now we have to load the game for you, all over again.",
