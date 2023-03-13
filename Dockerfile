@@ -1,6 +1,9 @@
-FROM python:3.10-alpine
+FROM python:3.11-alpine
 
-RUN apk add --no-cache gcc musl-dev libffi-dev
+ARG BOT_VERSION_ARG=latest
+ENV BOT_VERSION=$BOT_VERSION_ARG
+
+RUN apk add --no-cache gcc g++ musl-dev libffi-dev
 
 WORKDIR /usr/src/app
 
