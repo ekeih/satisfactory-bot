@@ -1,5 +1,11 @@
 {
   "extends": [
-    "config:base"
-  ]
+    "config:base",
+    ":prHourlyLimitNone",
+    ":rebaseStalePrs",
+    ":label(renovate)",
+    ":assignee(ekeih)",
+    ":automergeMinor"
+  ],
+  "platformAutomerge": true
 }
