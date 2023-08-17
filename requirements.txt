@@ -1,5 +1,5 @@
 click==8.1.7
-emoji==2.4.0
+emoji==2.8.0
 google-api-python-client==2.97.0
 prometheus-client==0.17.0
 PyGithub==1.58.2
