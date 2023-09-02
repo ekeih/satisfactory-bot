@@ -32,8 +32,15 @@ def cli(bot_token: str, github_token: str, youtube_token: str, chat_id: int, rep
         logging.info("Running version %s", installed_version)
         start_http_server(port=metrics_port, addr=metrics_address)
         Gauge("satisfactory_bot_info", "Static info of satisfactory-bot", ["version"]).labels(installed_version).set(1)
-        github_client = satisfactory.git.Git(github_token, repository)
-        youtube_client = satisfactory.youtube.Youtube(youtube_token)
+
+        github_client = None
+        if github_token is not None:
+            github_client = satisfactory.git.Git(github_token, repository)
+
+        youtube_client = None
+        if youtube_token is not None:
+            youtube_client = satisfactory.youtube.Youtube(youtube_token)
+
         bot = satisfactory.chat.Bot(bot_token=bot_token, chat_id=chat_id, github_client=github_client, youtube_client=youtube_client)
         bot.start()
 
