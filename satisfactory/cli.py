@@ -17,8 +17,8 @@ CONTEXT_SETTINGS = {
 
 @click.command(context_settings=CONTEXT_SETTINGS)
 @click.option("-b", "--bot-token", "bot_token", required=True, default=None, type=str, help="Telegram Bot Token")
-@click.option("-g", "--github-token", "github_token", required=True, default=None, type=str, help="GitHub token to access GitHub")
-@click.option("-y", "--youtube-token", "youtube_token", required=True, default=None, type=str, help="Google API token to access YouTube")
+@click.option("-g", "--github-token", "github_token", required=False, default=None, type=str, help="GitHub token to access GitHub")
+@click.option("-y", "--youtube-token", "youtube_token", required=False, default=None, type=str, help="Google API token to access YouTube")
 @click.option("-c", "--chat-id", "chat_id", required=True, default=None, type=int, help="Chat ID to send messages to")
 @click.option("-r", "--repository", "repository", required=True, default="ekeih/satisfactory-bot", type=str, help="GitHub repository")
 @click.option("-a", "--metrics-address", required=True, default="0.0.0.0", type=str, help="IP address to serve metrics on")
