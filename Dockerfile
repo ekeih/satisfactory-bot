@@ -1,7 +1,7 @@
 FROM python:3.12-alpine
 
-ARG BOT_VERSION_ARG=latest
-ENV BOT_VERSION=$BOT_VERSION_ARG
+ARG BOT_VERSION_ARG
+ENV BOT_VERSION=${BOT_VERSION_ARG:-0.0.0}
 
 RUN apk add --no-cache gcc g++ musl-dev libffi-dev
 
@@ -16,4 +16,3 @@ RUN pip3 --no-cache-dir --disable-pip-version-check install .
 
 USER guest
 ENTRYPOINT [ "satisfactory-bot" ]
-

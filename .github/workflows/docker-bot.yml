@@ -28,9 +28,9 @@ jobs:
           if [ $GITHUB_REF_TYPE == "tag" ]; then
             RELEASE_VERSION=${GITHUB_REF_NAME#*/}
           else
-            RELEASE_VERSION='latest'
+            RELEASE_VERSION=$(date "+%Y.%m.%d.dev%H%M%S")
           fi
-          echo ::set-output name=version::${RELEASE_VERSION}
+          echo version=${RELEASE_VERSION} >> $GITHUB_OUTPUT
 
       - name: Log into registry ${{ env.REGISTRY }}
         if: github.event_name != 'pull_request'
