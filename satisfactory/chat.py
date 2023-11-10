@@ -4,7 +4,8 @@ import random
 from prometheus_client import Summary
 from telegram import Update, constants
 from telegram.constants import ParseMode
-from telegram.ext import CallbackContext, CommandHandler, ApplicationBuilder, Application
+from telegram.ext import (Application, ApplicationBuilder, CallbackContext,
+                          CommandHandler)
 from telegram.ext.filters import Chat
 
 import satisfactory.game
@@ -93,7 +94,7 @@ class Bot:
                 new_versions_count += 1
                 self.github_client.create_tag(version_tag)
                 await context.bot.send_message(chat_id=self.chat_id, text="Tagged new release <code>%s</code>\n\n%s" % (
-                version_tag, satisfactory.game.get_random_quote()), parse_mode=ParseMode.HTML)
+                version_tag, satisfactory.game.get_random_quote()), parse_mode=ParseMode.HTML, disable_notification=True)
         if new_versions_count == 0 and not context.job:
             # A user triggered the check manually, inform them that there was no new version found.
             await context.bot.send_message(chat_id=self.chat_id,
@@ -106,7 +107,7 @@ class Bot:
         for news in recent_news:
             if len(news) <= constants.MessageLimit.MAX_TEXT_LENGTH:
                 await context.bot.send_message(chat_id=self.chat_id, text=news, parse_mode=ParseMode.HTML,
-                                               disable_web_page_preview=True)
+                                               disable_web_page_preview=True, disable_notification=True)
             else:
                 parts = []
                 while len(news) > 0:
@@ -124,20 +125,20 @@ class Bot:
                         break
                 for part in parts:
                     await context.bot.send_message(chat_id=self.chat_id, text=part, parse_mode=ParseMode.HTML,
-                                                   disable_web_page_preview=True)
+                                                   disable_web_page_preview=True, disable_notification=True)
         if len(recent_news) == 0 and not context.job:
             # A user triggered the check manually, inform them that there are no recent news available.
             await context.bot.send_message(chat_id=self.chat_id,
                                            text="No recent news found.\n\n%s" % (satisfactory.game.get_random_quote()),
-                                           parse_mode=ParseMode.HTML)
+                                           parse_mode=ParseMode.HTML, disable_notification=True)
 
     @Summary("satisfactory_bot_send_random_quote", "Time spent running send_random_quote").time()
     async def send_random_quote(self, context: CallbackContext) -> None:
         await context.bot.send_message(chat_id=self.chat_id, text=satisfactory.game.get_random_quote(),
-                                       parse_mode=ParseMode.HTML)
+                                       parse_mode=ParseMode.HTML, disable_notification=True)
 
     @Summary("satisfactory_bot_check_videos", "Time spent running check_videos").time()
     async def check_videos(self, context: CallbackContext) -> None:
         videos = self.youtube_client.get_new_videos()
         for video in videos:
-            await context.bot.send_message(chat_id=self.chat_id, text=video, parse_mode=ParseMode.HTML)
+            await context.bot.send_message(chat_id=self.chat_id, text=video, parse_mode=ParseMode.HTML, disable_notification=True)
