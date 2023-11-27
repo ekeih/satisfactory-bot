@@ -3,6 +3,6 @@ emoji==2.8.0
 google-api-python-client==2.108.0
 prometheus-client==0.19.0
 PyGithub==1.58.2
-python-telegram-bot[job-queue]==20.6
+python-telegram-bot[job-queue]==20.7
 requests==2.31.0
 steam[client]==1.4.4
