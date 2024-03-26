@@ -1,4 +1,4 @@
-FROM ubuntu:20.04
+FROM ubuntu:22.04
 
 # Install required system packages
 RUN apt-get update && apt-get upgrade -y && apt-get install -y curl software-properties-common && rm -rf /var/lib/apt/lists/*
