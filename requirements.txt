@@ -4,5 +4,5 @@ google-api-python-client==2.129.0
 prometheus-client==0.20.0
 PyGithub==1.58.2
 python-telegram-bot[job-queue]==20.8
-requests==2.31.0
+requests==2.32.1
 steam[client]==1.4.4
