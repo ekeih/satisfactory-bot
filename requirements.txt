@@ -1,6 +1,6 @@
 click==8.1.7
 emoji==2.12.1
-google-api-python-client==2.132.0
+google-api-python-client==2.133.0
 prometheus-client==0.20.0
 PyGithub==1.58.2
 python-telegram-bot[job-queue]==20.8
