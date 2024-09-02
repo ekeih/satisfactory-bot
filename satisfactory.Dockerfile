@@ -7,7 +7,7 @@ RUN apt-get update && apt-get upgrade -y && apt-get install -y curl software-pro
 RUN add-apt-repository multiverse && dpkg --add-architecture i386
 
 # Install required SteamCMD dependencies
-RUN apt-get update && apt-get upgrade -y && apt-get install -y lib32gcc1 && rm -rf /var/lib/apt/lists/*
+RUN apt-get update && apt-get upgrade -y && apt-get install -y lib32gcc1-s1 && rm -rf /var/lib/apt/lists/*
 
 # Add an unprivileged user
 # Running things in Docker as root is a security risk and should be avoided
