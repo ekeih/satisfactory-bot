@@ -1,5 +1,8 @@
 FROM ubuntu:24.04
 
+# https://askubuntu.com/a/1515958
+RUN touch /var/mail/ubuntu && chown ubuntu /var/mail/ubuntu && userdel -r ubuntu
+
 # Install required system packages
 RUN apt-get update && apt-get upgrade -y && apt-get install -y curl software-properties-common && rm -rf /var/lib/apt/lists/*
 
