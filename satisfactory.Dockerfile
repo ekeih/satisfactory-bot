@@ -43,6 +43,5 @@ RUN if [ "$RELEASE_BRANCH" = "server-public" ]; then \
 ENTRYPOINT [ "/home/steam/Steam/SatisfactoryDedicatedServer/FactoryServer.sh" ]
 
 # for documentation purposes
-EXPOSE 15777/udp
-EXPOSE 15000/udp
 EXPOSE 7777/udp
+EXPOSE 7777/tcp
