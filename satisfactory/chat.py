@@ -21,7 +21,7 @@ class Bot:
 
     def __init__(self, bot_token: str, chat_id: int, github_client: satisfactory.git.Git or None,
                  youtube_client: satisfactory.youtube.Youtube or None,
-                 server_address: str, server_token: str):
+                 server_address: str or None, server_token: str or None):
         self.chat_id = chat_id
         self.github_client = github_client
         self.youtube_client = youtube_client
