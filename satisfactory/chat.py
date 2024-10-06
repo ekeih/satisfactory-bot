@@ -189,7 +189,7 @@ class Bot:
             if text is not None:
                 await context.bot.send_message(
                     chat_id=self.chat_id, text=text,
-                    parse_mode=ParseMode.HTML, disable_notification=new_num_connected_players > 0
+                    parse_mode=ParseMode.HTML, disable_notification=new_num_connected_players == 0
                 )
 
             self.last_server_stats = server_stats
