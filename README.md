@@ -36,6 +36,8 @@ The bot checks for new release notes every 60 minutes and posts new release note
 
 If you really want to run the bot, the easiest way is to fork this repository. Create a GitHub personal access token that has write access to the fork and also [create a Telegram bot token](https://core.telegram.org/bots#6-botfather). To run the bot you can either use the existing [bot image](https://github.com/ekeih/satisfactory-bot/pkgs/container/satisfactory-bot%2Fbot) or clone the repository, install the bot manually with `cd satisfactory-bot && pip install .`.
 
+The bot can also query the HTTP API of the dedicated server and send notifications based on it. To enable this you need to provide both the server address and an API Token. A Token can be retrieved by a server admin by running `server.GenerateAPIToken` in the Server Console from within the game's server menu.
+
 Then run the bot: `satisfactory-bot -b $telegram-bot-token -g $github-token -c $telegram-chat-id -r $github-repository`.
 
 ## Credits
