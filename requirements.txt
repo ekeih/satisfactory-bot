@@ -6,3 +6,4 @@ PyGithub==2.4.0
 python-telegram-bot[job-queue]==20.8
 requests==2.32.3
 steam[client]==1.4.4
+pyfactorybridge==1.0.1
