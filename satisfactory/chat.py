@@ -12,6 +12,9 @@ import satisfactory.game
 import satisfactory.git
 import satisfactory.youtube
 
+KEY_SERVER_GAME_STATE = 'serverGameState'
+KEY_SERVER_STATS_NUM_CONNECTED_PLAYERS = 'numConnectedPlayers'
+
 
 class Bot:
     _app: Application
@@ -45,7 +48,7 @@ class Bot:
         if self.youtube_client is not None:
             self._app.job_queue.run_repeating(self.check_videos, interval=60 * 60, first=15)
         if self.gameserver_address is not None and self.gameserver_token is not None:
-            self._app.job_queue.run_repeating(self.check_server_status_timer, interval=60 * 5, first=5)
+            self._app.job_queue.run_repeating(self.check_server_status_timer, interval=10, first=5)
         self._app.job_queue.run_once(self.send_random_quote_timer, random.randrange(60 * 60 * 24, 60 * 60 * 24 * 7, 1))
         self._app.run_polling()
 
@@ -176,8 +179,9 @@ class Bot:
 
         try:
             server_stats = satisfactory_api_client.query_server_state()
-            new_num_connected_players = int(server_stats.get("NumConnectedPlayers", 0))
-            old_num_connected_players = self.last_server_stats.get("NumConnectedPlayers", 0) if self.last_server_stats else 0
+            server_stats = server_stats.get(KEY_SERVER_GAME_STATE, {})
+            new_num_connected_players = int(server_stats.get(KEY_SERVER_STATS_NUM_CONNECTED_PLAYERS, 0))
+            old_num_connected_players = self.last_server_stats.get(KEY_SERVER_STATS_NUM_CONNECTED_PLAYERS, 0) if self.last_server_stats else 0
 
             text = None
             if new_num_connected_players > 0 and new_num_connected_players != old_num_connected_players:
@@ -188,7 +192,7 @@ class Bot:
             if text is not None:
                 await context.bot.send_message(
                     chat_id=self.chat_id, text=text,
-                    parse_mode=ParseMode.HTML, disable_notification=True
+                    parse_mode=ParseMode.HTML, disable_notification=new_num_connected_players > 0
                 )
 
             self.last_server_stats = server_stats
