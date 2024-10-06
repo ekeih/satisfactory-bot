@@ -77,7 +77,7 @@ class Bot:
     async def check_news_timer(self, context: CallbackContext):
         await self.check_news(context)
 
-    @Summary("satisfactory_bot_check_news_timer", "Time spent running the check_news_timer").time()
+    @Summary("satisfactory_bot_check_server_status_timer", "Time spent running the check_server_status").time()
     async def check_server_status_timer(self, context: CallbackContext):
         await self.check_server_status(context)
 
