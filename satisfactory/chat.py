@@ -171,13 +171,10 @@ class Bot:
         if self.gameserver_address is None or self.gameserver_token is None:
             return
 
-        gameserver_address = self.gameserver_address
-        gameserver_token = self.gameserver_token
-
-        from pyfactorybridge import API
-        satisfactory_api_client = API(address=gameserver_address, token=gameserver_token)
-
         try:
+            from pyfactorybridge import API
+            satisfactory_api_client = API(address=self.gameserver_address, token=self.gameserver_token)
+
             server_stats = satisfactory_api_client.query_server_state()
             server_stats = server_stats.get(KEY_SERVER_GAME_STATE, {})
             new_num_connected_players = int(server_stats.get(KEY_SERVER_STATS_NUM_CONNECTED_PLAYERS, 0))
