@@ -12,6 +12,9 @@ import satisfactory.game
 import satisfactory.git
 import satisfactory.youtube
 
+KEY_SERVER_GAME_STATE = 'serverGameState'
+KEY_SERVER_STATS_NUM_CONNECTED_PLAYERS = 'numConnectedPlayers'
+
 
 class Bot:
     _app: Application
@@ -20,10 +23,15 @@ class Bot:
     chat_id = None
 
     def __init__(self, bot_token: str, chat_id: int, github_client: satisfactory.git.Git or None,
-                 youtube_client: satisfactory.youtube.Youtube or None):
+                 youtube_client: satisfactory.youtube.Youtube or None,
+                 server_address: str or None, server_token: str or None):
         self.chat_id = chat_id
         self.github_client = github_client
         self.youtube_client = youtube_client
+
+        self.gameserver_address = server_address
+        self.gameserver_token = server_token
+        self.last_server_stats = None
 
         self._app = ApplicationBuilder().token(bot_token).build()
 
@@ -39,6 +47,8 @@ class Bot:
         self._app.job_queue.run_repeating(self.check_news_timer, interval=60 * 60, first=30)
         if self.youtube_client is not None:
             self._app.job_queue.run_repeating(self.check_videos, interval=60 * 60, first=15)
+        if self.gameserver_address is not None and self.gameserver_token is not None:
+            self._app.job_queue.run_repeating(self.check_server_status_timer, interval=10, first=5)
         self._app.job_queue.run_once(self.send_random_quote_timer, random.randrange(60 * 60 * 24, 60 * 60 * 24 * 7, 1))
         self._app.run_polling()
 
@@ -70,6 +80,10 @@ class Bot:
     async def check_news_timer(self, context: CallbackContext):
         await self.check_news(context)
 
+    @Summary("satisfactory_bot_check_server_status_timer", "Time spent running the check_server_status").time()
+    async def check_server_status_timer(self, context: CallbackContext):
+        await self.check_server_status(context)
+
     @Summary("satisfactory_bot_check_videos_timer", "Time spent running the check_videos_timer").time()
     async def check_videos_timer(self, context: CallbackContext):
         await self.check_videos(context)
@@ -93,13 +107,21 @@ class Bot:
                 logging.info("Tagging new %s version: %s", version, version_tag)
                 new_versions_count += 1
                 self.github_client.create_tag(version_tag)
-                await context.bot.send_message(chat_id=self.chat_id, text="Tagged new release <code>%s</code>\n\n%s" % (
-                version_tag, satisfactory.game.get_random_quote()), parse_mode=ParseMode.HTML, disable_notification=True)
+                await context.bot.send_message(
+                    chat_id=self.chat_id,
+                    text="Tagged new release <code>%s</code>\n\n%s" % (
+                        version_tag, satisfactory.game.get_random_quote()),
+                    parse_mode=ParseMode.HTML,
+                    disable_notification=True
+                )
         if new_versions_count == 0 and not context.job:
             # A user triggered the check manually, inform them that there was no new version found.
-            await context.bot.send_message(chat_id=self.chat_id,
-                                           text="No newer versions available, doing nothing.\n\n%s" % (
-                                               satisfactory.game.get_random_quote()), parse_mode=ParseMode.HTML)
+            await context.bot.send_message(
+                chat_id=self.chat_id,
+                text="No newer versions available, doing nothing.\n\n%s" % (
+                    satisfactory.game.get_random_quote()),
+                parse_mode=ParseMode.HTML
+            )
 
     @Summary("satisfactory_bot_check_news", "Time spent running check_news").time()
     async def check_news(self, context: CallbackContext) -> None:
@@ -141,4 +163,36 @@ class Bot:
     async def check_videos(self, context: CallbackContext) -> None:
         videos = self.youtube_client.get_new_videos()
         for video in videos:
-            await context.bot.send_message(chat_id=self.chat_id, text=video, parse_mode=ParseMode.HTML, disable_notification=True)
+            await context.bot.send_message(chat_id=self.chat_id, text=video, parse_mode=ParseMode.HTML,
+                                           disable_notification=True)
+
+    @Summary("satisfactory_bot_check_server_status", "Time spent running check_server_status").time()
+    async def check_server_status(self, context: CallbackContext) -> None:
+        if self.gameserver_address is None or self.gameserver_token is None:
+            return
+
+        try:
+            from pyfactorybridge import API
+            satisfactory_api_client = API(address=self.gameserver_address, token=self.gameserver_token)
+
+            server_stats = satisfactory_api_client.query_server_state()
+            server_stats = server_stats.get(KEY_SERVER_GAME_STATE, {})
+            new_num_connected_players = int(server_stats.get(KEY_SERVER_STATS_NUM_CONNECTED_PLAYERS, 0))
+            old_num_connected_players = self.last_server_stats.get(KEY_SERVER_STATS_NUM_CONNECTED_PLAYERS, 0) if self.last_server_stats else 0
+
+            text = None
+            if new_num_connected_players > 0 and new_num_connected_players != old_num_connected_players:
+                text = f"New active players: {new_num_connected_players}"
+            elif new_num_connected_players == 0 and new_num_connected_players != old_num_connected_players:
+                text = f"Server is empty."
+
+            if text is not None:
+                await context.bot.send_message(
+                    chat_id=self.chat_id, text=text,
+                    parse_mode=ParseMode.HTML, disable_notification=new_num_connected_players == 0
+                )
+
+            self.last_server_stats = server_stats
+        except Exception as e:
+            logging.error("Failed to query server state: %s", e)
+            return
