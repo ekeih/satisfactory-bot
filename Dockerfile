@@ -1,4 +1,4 @@
-FROM python:3.12-alpine
+FROM python:3.13-alpine
 
 ARG BOT_VERSION_ARG
 ENV BOT_VERSION=${BOT_VERSION_ARG:-0.0.0}
