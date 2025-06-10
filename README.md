@@ -20,6 +20,7 @@ The images are tagged with the release date and the build ID, e.g. `2022.05.24-8
 Following ports are exposed by the Docker images:
 - 7777/udp
 - 7777/tcp
+- 8888/tcp
 
 The game data is stored in `/home/steam/.config/Epic/FactoryGame/Saved/SaveGames/server` and configuration data in `/home/steam/Steam/SatisfactoryDedicatedServer/FactoryGame/Saved`. If you run into permission issues or missing files in the second directory during the first start, check [this issue](https://github.com/YannickFricke/Satisfactory-DS-Docker/issues/2).
 
